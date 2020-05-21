@@ -1,7 +1,11 @@
 require 'rb-scpt'
 class I2Cssh
-    def initialize servers, ssh_options, i2_options, ssh_environment
-        @ssh_prefix         = "ssh " + ssh_options.join(' ')
+    def initialize servers, ssh_options, i2_options, ssh_environment, i2_options
+        if options[:teleport] then
+            @ssh_prefix         = "tsh ssh " + ssh_options.join(' ')
+        else
+            @ssh_prefix         = "ssh " + ssh_options.join(' ')
+        end
         @ssh_options        = ssh_options
         @i2_options         = i2_options.clone
         @servers            = servers

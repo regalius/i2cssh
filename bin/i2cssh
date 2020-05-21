@@ -6,7 +6,7 @@ require 'yaml'
 
 @config_file = File.expand_path "~/.i2csshrc"
 
-@i2_options, ssh_options, @servers, @clusters, @ssh_environment, opts_from_cmdline = [], [], [], {}, [], {}
+@i2_options, ssh_options, @servers, @clusters, @ssh_environment, opts_from_cmdline, options = [], [], [], {}, [], {}, {}
 
 def get_hosts(c)
     c.each do |clus|
@@ -87,6 +87,12 @@ end
 
 optparse = OptionParser.new do |opts|
     opts.banner = "Usage: #{File.basename(__FILE__)} [options] [(username@host [username@host] | username@cluster)]"
+
+    # Use teleport instead of SSH
+    opts.on '--teleport',
+        'Use teleport' do
+        options[:teleport] = true
+    end
 
     # Check if we have a cluster.
     opts.on '-c', '--clusters clus1,clus2', Array,
@@ -299,4 +305,4 @@ if @servers.empty?
 end
 
 
-I2Cssh.new @servers, ssh_options, @i2_options, @ssh_environment
+I2Cssh.new @servers, ssh_options, @i2_options, @ssh_environment, options
